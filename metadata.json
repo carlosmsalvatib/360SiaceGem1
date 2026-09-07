@@ -1,0 +1,7 @@
+{
+  "name": "360 SIACE - Sistema SIAH",
+  "description": "Plataforma corporativa y de gestión back-office para 360 SIACE y modelo SIAH con dashboard métrico, carrusel 3D de proyectos y CMS administrativo.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
