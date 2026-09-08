@@ -10,6 +10,8 @@ export interface Rol {
   permisos: string[];
 }
 
+export type OrigenImagen = 'ARCHIVO_LOCAL' | 'URL_EXTERNA' | 'BANCO_SIAH' | 'AVATAR_GENERADO' | 'CAMARA_DIRECTA';
+
 export interface Usuario {
   id: number;
   nombre: string;
@@ -17,7 +19,11 @@ export interface Usuario {
   password_hash?: string;
   rol_id: number;
   rol_nombre?: string;
+  cargo?: string;
+  telefono?: string;
+  organizacion?: string;
   avatar_url?: string;
+  avatar_origen?: OrigenImagen;
   estado: 'ACTIVO' | 'INACTIVO' | 'SUSPENDIDO';
   ultimo_acceso?: string;
   creado_en: string;
@@ -39,8 +45,12 @@ export interface Proyecto {
   ubicacion: string;
   cooperantes_clave: string[];
   imagen_url: string;
+  imagen_origen?: OrigenImagen;
   color_accent: string;
   icono: string;
+  auditoria_estado?: 'CONFORME' | 'OBSERVADO' | 'EN_REVISION' | 'PENDIENTE';
+  auditor_responsable?: string;
+  auditoria_notas?: string;
 }
 
 export interface AreaClave {
@@ -75,6 +85,7 @@ export interface Profesional {
   certificaciones: string[];
   experiencia_anos: number;
   foto_url: string;
+  foto_origen?: OrigenImagen;
   email_corporativo: string;
   orden_visual: number;
 }

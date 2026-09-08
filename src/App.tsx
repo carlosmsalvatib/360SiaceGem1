@@ -29,6 +29,8 @@ import { ProjectDetailModal } from './components/ProjectDetailModal';
 import { LoginModal } from './components/LoginModal';
 import { ArchitectureModal } from './components/ArchitectureModal';
 import { CmsBackofficeModal } from './components/CmsBackofficeModal';
+import { EditProfesionalModal } from './components/EditProfesionalModal';
+import { EditProjectModal } from './components/EditProjectModal';
 
 export default function App() {
   // Config state with localStorage persistence
@@ -88,9 +90,18 @@ export default function App() {
   // Modals & Navigation state
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isCmsOpen, setIsCmsOpen] = useState(false);
+  const [cmsInitialTab, setCmsInitialTab] = useState<string | undefined>(undefined);
   const [isArchitectureOpen, setIsArchitectureOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Proyecto | null>(null);
   const [selectedAreaId, setSelectedAreaId] = useState<string | null>(null);
+
+  // Direct edit profesional state (from Quiénes Somos section)
+  const [directEditProfesional, setDirectEditProfesional] = useState<Profesional | null>(null);
+  const [isDirectAddProfesional, setIsDirectAddProfesional] = useState(false);
+
+  // Direct edit project state (from Carrusel 3D, Ficha modal, or Projects section)
+  const [directEditProject, setDirectEditProject] = useState<Proyecto | null>(null);
+  const [isDirectAddProject, setIsDirectAddProject] = useState(false);
 
   // Persistence handlers
   const handleUpdateConfig = (newConfig: ConfigCMS) => {
@@ -113,9 +124,50 @@ export default function App() {
     localStorage.setItem('360siace_profesionales', JSON.stringify(newProfesionales));
   };
 
+  // Direct save handler for EditProfesionalModal from TeamSection
+  const handleSaveDirectProfesional = (savedProf: Profesional) => {
+    const exists = profesionales.some(p => p.id === savedProf.id);
+    let updatedList: Profesional[];
+    if (exists) {
+      updatedList = profesionales.map(p => p.id === savedProf.id ? savedProf : p);
+    } else {
+      updatedList = [...profesionales, savedProf];
+    }
+    handleUpdateProfesionales(updatedList);
+  };
+
+  // Direct save handler for EditProjectModal (from Carousel 3D, Ficha modal, or Projects section)
+  const handleSaveDirectProject = (savedProj: Proyecto) => {
+    const exists = proyectos.some(p => p.id === savedProj.id);
+    let updatedList: Proyecto[];
+    if (exists) {
+      updatedList = proyectos.map(p => p.id === savedProj.id ? savedProj : p);
+      if (selectedProject && selectedProject.id === savedProj.id) {
+        setSelectedProject(savedProj);
+      }
+    } else {
+      updatedList = [...proyectos, savedProj];
+    }
+    handleUpdateProyectos(updatedList);
+    setDirectEditProject(null);
+    setIsDirectAddProject(false);
+  };
+
   const handleUpdateUsuarios = (newUsuarios: Usuario[]) => {
     setUsuarios(newUsuarios);
     localStorage.setItem('360siace_usuarios', JSON.stringify(newUsuarios));
+    if (currentUser) {
+      const updatedSelf = newUsuarios.find(u => u.id === currentUser.id);
+      if (updatedSelf) {
+        setCurrentUser(updatedSelf);
+        localStorage.setItem('360siace_current_user', JSON.stringify(updatedSelf));
+      }
+    }
+  };
+
+  const handleSwitchUser = (user: Usuario) => {
+    setCurrentUser(user);
+    localStorage.setItem('360siace_current_user', JSON.stringify(user));
   };
 
   const handleLoginSuccess = (user: Usuario) => {
@@ -185,12 +237,22 @@ export default function App() {
         {/* 4. Strategic Projects Section (Grid of 6 Projects) */}
         <ProjectsSection
           proyectos={proyectos}
+          currentUser={currentUser}
           onSelectProject={(proj) => setSelectedProject(proj)}
+          onEditProject={(proj) => setDirectEditProject(proj)}
+          onAddProject={() => setIsDirectAddProject(true)}
         />
 
         {/* 5. Quiénes Somos & Gestión de Profesionales */}
         <TeamSection
           profesionales={profesionales}
+          currentUser={currentUser}
+          onEditProfesional={(prof) => setDirectEditProfesional(prof)}
+          onAddProfesional={() => setIsDirectAddProfesional(true)}
+          onOpenCmsTeam={() => {
+            setCmsInitialTab('profesionales');
+            setIsCmsOpen(true);
+          }}
         />
 
         {/* 6. ¿Por qué elegirnos? (ECHO, USAID, ONU) & Lead Contact Form */}
@@ -210,11 +272,15 @@ export default function App() {
       {/* MODAL: Project Detail Landing View */}
       <ProjectDetailModal
         proyecto={selectedProject}
+        currentUser={currentUser}
         onClose={() => setSelectedProject(null)}
         onRequestQuote={() => {
           setSelectedProject(null);
           const elem = document.getElementById('contacto');
           if (elem) elem.scrollIntoView({ behavior: 'smooth' });
+        }}
+        onEditProject={(proj) => {
+          setDirectEditProject(proj);
         }}
       />
 
@@ -236,7 +302,11 @@ export default function App() {
       {currentUser && (
         <CmsBackofficeModal
           isOpen={isCmsOpen}
-          onClose={() => setIsCmsOpen(false)}
+          onClose={() => {
+            setIsCmsOpen(false);
+            setCmsInitialTab(undefined);
+          }}
+          initialTab={cmsInitialTab}
           currentUser={currentUser}
           config={config}
           onUpdateConfig={handleUpdateConfig}
@@ -249,6 +319,37 @@ export default function App() {
           usuarios={usuarios}
           onUpdateUsuarios={handleUpdateUsuarios}
           roles={INITIAL_ROLES}
+          onSwitchUser={handleSwitchUser}
+        />
+      )}
+
+      {/* DIRECT MODAL: Edit Profesional from Quiénes Somos Section (Levels 1, 2, 3) */}
+      {currentUser && (
+        <EditProfesionalModal
+          isOpen={isDirectAddProfesional || !!directEditProfesional}
+          onClose={() => {
+            setDirectEditProfesional(null);
+            setIsDirectAddProfesional(false);
+          }}
+          profesionalToEdit={directEditProfesional}
+          isNew={isDirectAddProfesional}
+          currentUser={currentUser}
+          onSaveProfesional={handleSaveDirectProfesional}
+        />
+      )}
+
+      {/* DIRECT MODAL: Edit Project from Carousel / Ficha Modal / Projects Section */}
+      {currentUser && (
+        <EditProjectModal
+          isOpen={isDirectAddProject || !!directEditProject}
+          onClose={() => {
+            setDirectEditProject(null);
+            setIsDirectAddProject(false);
+          }}
+          projectToEdit={directEditProject}
+          isNew={isDirectAddProject}
+          currentUser={currentUser}
+          onSaveProject={handleSaveDirectProject}
         />
       )}
 

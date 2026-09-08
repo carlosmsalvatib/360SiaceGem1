@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Proyecto } from '../types';
+import { Proyecto, Usuario } from '../types';
 import { 
   FolderKanban, 
   TrendingUp, 
@@ -9,20 +9,31 @@ import {
   Sparkles,
   Search,
   CheckCircle2,
-  Clock
+  Clock,
+  Edit3,
+  Plus
 } from 'lucide-react';
 
 interface ProjectsSectionProps {
   proyectos: Proyecto[];
+  currentUser?: Usuario | null;
   onSelectProject: (proyecto: Proyecto) => void;
+  onEditProject?: (proyecto: Proyecto) => void;
+  onAddProject?: () => void;
 }
 
 export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
   proyectos,
-  onSelectProject
+  currentUser,
+  onSelectProject,
+  onEditProject,
+  onAddProject
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState<string>('ALL');
+
+  // Can edit projects if user is SuperAdmin (1), Admin (2), Auditor (3), Editor (4)
+  const canEdit = !!currentUser && currentUser.rol_id <= 4;
 
   const categories = ['ALL', ...Array.from(new Set(proyectos.map(p => p.categoria)))];
 
@@ -77,6 +88,18 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
                 </option>
               ))}
             </select>
+
+            {canEdit && onAddProject && (
+              <button
+                type="button"
+                onClick={onAddProject}
+                className="px-3.5 py-2 rounded-xl bg-[#38BDF8] hover:bg-sky-300 text-[#000033] font-bold text-xs flex items-center justify-center gap-1.5 shadow-[0_0_15px_rgba(56,189,248,0.3)] transition-all shrink-0 hover:scale-[1.02]"
+                title="Registrar nuevo proyecto en CMS para el Carrusel 3D"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>+ Nuevo Proyecto</span>
+              </button>
+            )}
           </div>
         </div>
 
@@ -179,16 +202,34 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
                   </span>
                 </div>
 
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onSelectProject(proyecto);
-                  }}
-                  className="w-full py-2.5 px-3 rounded-xl bg-white/[0.05] hover:bg-[#38BDF8] text-slate-200 hover:text-[#000033] hover:font-bold text-xs font-semibold flex items-center justify-center gap-1.5 transition-all border border-white/10 group-hover:border-[#38BDF8]/50"
-                >
-                  <span>Ver Expediente del Proyecto</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelectProject(proyecto);
+                    }}
+                    className="flex-1 py-2.5 px-3 rounded-xl bg-white/[0.05] hover:bg-[#38BDF8] text-slate-200 hover:text-[#000033] hover:font-bold text-xs font-semibold flex items-center justify-center gap-1.5 transition-all border border-white/10 group-hover:border-[#38BDF8]/50"
+                  >
+                    <span>Ver Expediente</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </button>
+
+                  {canEdit && onEditProject && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onEditProject(proyecto);
+                      }}
+                      className="py-2.5 px-3 rounded-xl bg-white/[0.08] hover:bg-[#38BDF8] text-[#38BDF8] hover:text-[#000033] border border-[#38BDF8]/40 hover:border-[#38BDF8] text-xs font-bold flex items-center gap-1 transition-all shadow-[0_0_12px_rgba(56,189,248,0.2)] shrink-0 hover:scale-[1.02]"
+                      title="Editar toda la información del proyecto en CMS (Carrusel y Ficha)"
+                    >
+                      <Edit3 className="w-3.5 h-3.5" />
+                      <span className="hidden sm:inline">Editar</span>
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           ))}

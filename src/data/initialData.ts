@@ -13,30 +13,37 @@ export const INITIAL_ROLES: Rol[] = [
   {
     id: 1,
     codigo: 'SUPERADMIN',
-    nombre: 'Super Administrador',
-    descripcion: 'Control total de la plataforma, roles, base de datos y CMS.',
-    permisos: ['ALL', 'USERS_MANAGE', 'CMS_EDIT', 'AUDIT_VIEW', 'METRICS_EXPORT']
+    nombre: 'Super Administrador (Nivel 1)',
+    descripcion: 'Control total de la plataforma, edición de cualquier usuario, CMS global, base de datos y seguridad.',
+    permisos: ['ALL', 'USERS_MANAGE_ALL', 'CMS_FULL_EDIT', 'PROJECTS_MANAGE', 'SERVICES_MANAGE', 'AUDIT_FULL', 'SYSTEM_CONFIG']
   },
   {
     id: 2,
     codigo: 'ADMIN',
-    nombre: 'Director Operativo / Admin',
-    descripcion: 'Gestión de proyectos, servicios y métricas del modelo SIAH.',
-    permisos: ['PROJECTS_MANAGE', 'SERVICES_MANAGE', 'CMS_EDIT', 'METRICS_VIEW']
+    nombre: 'Director Operativo / Admin (Nivel 2)',
+    descripcion: 'Gestión de proyectos, servicios y métricas SIAH. Puede modificar usuarios de su nivel e inferiores.',
+    permisos: ['PROJECTS_MANAGE', 'SERVICES_MANAGE', 'CMS_EDIT', 'USERS_MANAGE_SUB', 'METRICS_VIEW', 'TEAM_MANAGE']
   },
   {
     id: 3,
     codigo: 'AUDITOR',
-    nombre: 'Auditor Financiero & Concurrente',
-    descripcion: 'Inspección de expedientes, bitácora de cumplimiento y reportes.',
-    permisos: ['AUDIT_VIEW', 'REPORTS_DOWNLOAD', 'PROJECTS_VIEW']
+    nombre: 'Auditor Financiero & Concurrente (Nivel 3)',
+    descripcion: 'CMS de fiscalización, auditoría de fondos multilaterales, dictámenes y gestión autorizada del equipo técnico.',
+    permisos: ['AUDIT_MANAGE', 'PROJECTS_AUDIT', 'REPORTS_DOWNLOAD', 'PROFILE_EDIT', 'AUDIT_CERTIFICATES', 'TEAM_MANAGE']
   },
   {
     id: 4,
+    codigo: 'EDITOR',
+    nombre: 'Editor de Contenidos & Storytelling (Nivel 4)',
+    descripcion: 'CMS de comunicación, redacción del Hero, fichas narrativas de impacto humanitario y notas de prensa.',
+    permisos: ['CMS_TEXTS_EDIT', 'PROJECTS_STORIES_EDIT', 'MEDIA_MANAGE', 'PROFILE_EDIT']
+  },
+  {
+    id: 5,
     codigo: 'CONSULTOR',
-    nombre: 'Consultor / Visualizador',
-    descripcion: 'Acceso en modo lectura para cooperantes y directivos.',
-    permisos: ['VIEW_ONLY']
+    nombre: 'Consultor / Observador Multilateral (Nivel 5)',
+    descripcion: 'CMS de monitoreo ejecutivo, veeduría de cooperantes (ECHO, USAID, ONU) y descarga de expedientes.',
+    permisos: ['EXECUTIVE_VIEW', 'METRICS_ANALYTICS', 'DOSSIER_DOWNLOAD', 'PROFILE_EDIT']
   }
 ];
 
@@ -46,10 +53,14 @@ export const INITIAL_USERS: Usuario[] = [
     nombre: 'Ing. Carlos Salvatierra',
     email: 'salvaticarlos@gmail.com',
     rol_id: 1,
-    rol_nombre: 'Super Administrador',
+    rol_nombre: 'Super Administrador (Nivel 1)',
+    cargo: 'Director General & Arquitecto Principal',
+    telefono: '+58 414-360-0001',
+    organizacion: '360 SIACE Global',
     avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+    avatar_origen: 'BANCO_SIAH',
     estado: 'ACTIVO',
-    ultimo_acceso: 'Hace 5 minutos (Sesión actual)',
+    ultimo_acceso: 'Hace 2 minutos (Sesión actual)',
     creado_en: '2025-01-10'
   },
   {
@@ -57,8 +68,12 @@ export const INITIAL_USERS: Usuario[] = [
     nombre: 'Dra. Valentina Mendoza',
     email: 'vmendoza@360siace.com',
     rol_id: 2,
-    rol_nombre: 'Director Operativo / Admin',
+    rol_nombre: 'Director Operativo / Admin (Nivel 2)',
+    cargo: 'Directora de Operaciones Humanitarias',
+    telefono: '+58 412-360-0002',
+    organizacion: 'SIAH Operaciones de Campo',
     avatar_url: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=200&q=80',
+    avatar_origen: 'BANCO_SIAH',
     estado: 'ACTIVO',
     ultimo_acceso: 'Hoy a las 09:15 AM',
     creado_en: '2025-02-14'
@@ -68,11 +83,45 @@ export const INITIAL_USERS: Usuario[] = [
     nombre: 'Lic. Roberto Briceño',
     email: 'rbriceno@360siace.com',
     rol_id: 3,
-    rol_nombre: 'Auditor Financiero & Concurrente',
+    rol_nombre: 'Auditor Financiero & Concurrente (Nivel 3)',
+    cargo: 'Auditor Senior Fiduciario y ECHO/USAID',
+    telefono: '+58 416-360-0003',
+    organizacion: 'Comité de Auditoría Concurrente SIAH',
     avatar_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
+    avatar_origen: 'BANCO_SIAH',
     estado: 'ACTIVO',
-    ultimo_acceso: 'Ayer a las 18:40 PM',
+    ultimo_acceso: 'Hoy a las 08:30 AM',
     creado_en: '2025-03-01'
+  },
+  {
+    id: 4,
+    nombre: 'Lcda. Mariana Gómez',
+    email: 'mgomez@360siace.com',
+    rol_id: 4,
+    rol_nombre: 'Editor de Contenidos & Storytelling (Nivel 4)',
+    cargo: 'Coordinadora de Comunicaciones y Medios Humanitarios',
+    telefono: '+58 424-360-0004',
+    organizacion: 'Área de Comunicaciones 360 SIACE',
+    avatar_url: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80',
+    avatar_origen: 'BANCO_SIAH',
+    estado: 'ACTIVO',
+    ultimo_acceso: 'Ayer a las 16:20 PM',
+    creado_en: '2025-03-10'
+  },
+  {
+    id: 5,
+    nombre: 'Dr. Jean-Pierre Laurent',
+    email: 'jplaurent@cooperacion.org',
+    rol_id: 5,
+    rol_nombre: 'Consultor / Observador Multilateral (Nivel 5)',
+    cargo: 'Veedor Internacional & Evaluador de Proyectos',
+    telefono: '+33 1 42 68 00 05',
+    organizacion: 'Misión Multilateral de Cooperación',
+    avatar_url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
+    avatar_origen: 'BANCO_SIAH',
+    estado: 'ACTIVO',
+    ultimo_acceso: 'Ayer a las 11:00 AM',
+    creado_en: '2025-03-15'
   }
 ];
 
@@ -382,6 +431,7 @@ export const INITIAL_PROFESIONALES: Profesional[] = [
     certificaciones: ['PMP® Certified', 'ISO 27001 Lead Implementer', 'Scrum Master'],
     experiencia_anos: 18,
     foto_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
+    foto_origen: 'BANCO_SIAH',
     email_corporativo: 'csalvatierra@360siace.com',
     orden_visual: 1
   },
@@ -395,6 +445,7 @@ export const INITIAL_PROFESIONALES: Profesional[] = [
     certificaciones: ['CPA / Contador Público', 'ECHO Compliance Master', 'Especialista NIIF'],
     experiencia_anos: 15,
     foto_url: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80',
+    foto_origen: 'BANCO_SIAH',
     email_corporativo: 'vmendoza@360siace.com',
     orden_visual: 2
   },
@@ -408,6 +459,7 @@ export const INITIAL_PROFESIONALES: Profesional[] = [
     certificaciones: ['Magíster en Derecho Corporativo', 'Especialista en Gobernanza ONG', 'Mediador Laboral'],
     experiencia_anos: 14,
     foto_url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80',
+    foto_origen: 'BANCO_SIAH',
     email_corporativo: 'rbriceno@360siace.com',
     orden_visual: 3
   },
@@ -421,6 +473,7 @@ export const INITIAL_PROFESIONALES: Profesional[] = [
     certificaciones: ['Ingeniero Civil Colegiado', 'Modelador BIM Revit', 'Seguridad en Construcción OHSAS'],
     experiencia_anos: 12,
     foto_url: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&q=80',
+    foto_origen: 'BANCO_SIAH',
     email_corporativo: 'msoto@360siace.com',
     orden_visual: 4
   }

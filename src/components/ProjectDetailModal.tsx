@@ -1,5 +1,5 @@
 import React from 'react';
-import { Proyecto } from '../types';
+import { Proyecto, Usuario } from '../types';
 import { 
   X, 
   MapPin, 
@@ -8,24 +8,33 @@ import {
   DollarSign, 
   ShieldCheck, 
   Globe2, 
-  CheckCircle2,
-  Calendar,
-  Building,
-  HeartHandshake
+  CheckCircle2, 
+  Calendar, 
+  Building, 
+  HeartHandshake,
+  Edit3,
+  Sparkles
 } from 'lucide-react';
 
 interface ProjectDetailModalProps {
   proyecto: Proyecto | null;
+  currentUser?: Usuario | null;
   onClose: () => void;
   onRequestQuote: (proyecto: Proyecto) => void;
+  onEditProject?: (proyecto: Proyecto) => void;
 }
 
 export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
   proyecto,
+  currentUser,
   onClose,
-  onRequestQuote
+  onRequestQuote,
+  onEditProject
 }) => {
   if (!proyecto) return null;
+
+  // Roles authorized to edit project in CMS: Superadmin (1), Admin (2), Auditor (3), Editor (4)
+  const canEdit = !!currentUser && (currentUser.rol_id <= 4);
 
   return (
     <div 
@@ -36,13 +45,30 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
         className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-[#000033]/90 border border-white/10 rounded-3xl shadow-[0_8px_32px_0_rgba(0,0,51,0.8)] backdrop-blur-2xl p-6 sm:p-8 space-y-6 text-slate-100"
         onClick={e => e.stopPropagation()}
       >
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-5 right-5 p-2 rounded-xl bg-white/[0.05] text-slate-400 hover:text-white border border-white/10 hover:bg-white/10 transition-all z-10"
-        >
-          <X className="w-5 h-5" />
-        </button>
+        {/* Close & CMS Edit Buttons */}
+        <div className="absolute top-5 right-5 flex items-center gap-2 z-10">
+          {canEdit && onEditProject && (
+            <button
+              type="button"
+              onClick={() => {
+                onEditProject(proyecto);
+              }}
+              className="px-3 py-2 rounded-xl bg-[#000033]/80 hover:bg-[#38BDF8] text-[#38BDF8] hover:text-[#000033] border border-[#38BDF8]/50 hover:border-[#38BDF8] text-xs font-bold flex items-center gap-1.5 transition-all shadow-[0_0_15px_rgba(56,189,248,0.25)] backdrop-blur-md"
+              title="Editar toda la información de este proyecto en el CMS"
+            >
+              <Edit3 className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Editar en CMS</span>
+            </button>
+          )}
+
+          <button
+            onClick={onClose}
+            className="p-2 rounded-xl bg-[#000033]/80 text-slate-300 hover:text-white border border-white/10 hover:bg-white/10 transition-all backdrop-blur-md"
+            title="Cerrar Ficha"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
 
         {/* Hero Image Banner */}
         <div className="relative h-56 sm:h-64 rounded-2xl overflow-hidden border border-white/10">
@@ -169,7 +195,19 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
           <span className="text-xs text-slate-400">
             Ficha técnica validada por el Comité de Auditoría Concurrente SIAH.
           </span>
-          <div className="flex items-center gap-2 w-full sm:w-auto">
+          <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-end">
+            {canEdit && onEditProject && (
+              <button
+                type="button"
+                onClick={() => {
+                  onEditProject(proyecto);
+                }}
+                className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-white/[0.08] hover:bg-[#38BDF8] text-[#38BDF8] hover:text-[#000033] text-xs font-bold border border-[#38BDF8]/40 hover:border-[#38BDF8] transition-all flex items-center justify-center gap-1.5 shadow-[0_0_15px_rgba(56,189,248,0.2)]"
+              >
+                <Edit3 className="w-3.5 h-3.5" />
+                <span>Editar Toda la Información en CMS</span>
+              </button>
+            )}
             <button
               onClick={onClose}
               className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-white/[0.05] hover:bg-white/10 text-slate-300 text-xs font-semibold border border-white/10 transition-all"

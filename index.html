@@ -3,6 +3,38 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      // Safeguard against 'Cannot set property fetch of #<Window> which has only a getter'
+      (function() {
+        try {
+          var nativeFetch = typeof window !== 'undefined' ? window.fetch : null;
+          var fetchFn = nativeFetch ? nativeFetch.bind(window) : null;
+          var descriptor = {
+            get: function() {
+              return fetchFn;
+            },
+            set: function(val) {
+              fetchFn = val;
+            },
+            configurable: true,
+            enumerable: true
+          };
+          try {
+            Object.defineProperty(window, 'fetch', descriptor);
+          } catch (_) {}
+          try {
+            if (typeof Window !== 'undefined' && Window.prototype) {
+              Object.defineProperty(Window.prototype, 'fetch', descriptor);
+            }
+          } catch (_) {}
+          try {
+            if (typeof globalThis !== 'undefined' && globalThis !== window) {
+              Object.defineProperty(globalThis, 'fetch', descriptor);
+            }
+          } catch (_) {}
+        } catch (_) {}
+      })();
+    </script>
     <title>360 SIACE - Sistema SIAH | Tu Back-Office Especializado</title>
     <meta name="description" content="Plataforma corporativa y de gestión back-office para 360 SIACE y modelo SIAH con dashboard métrico, carrusel 3D de proyectos y CMS administrativo." />
     <meta property="og:title" content="360 SIACE - Sistema SIAH | Tu Back-Office Especializado" />
