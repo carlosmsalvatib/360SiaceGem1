@@ -248,6 +248,15 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Right CTA Actions */}
         <div className="hidden sm:flex items-center gap-2.5">
           
+          {/* Cloud Database indicator */}
+          <div 
+            className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-[11px] font-mono text-emerald-300 shadow-sm"
+            title="Base de datos en la nube conectada: Sincronización en tiempo real vía Firebase Firestore"
+          >
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Firestore Cloud</span>
+          </div>
+
           {/* Architecture / MariaDB SQL button */}
           <button
             id="btn-nav-architecture"

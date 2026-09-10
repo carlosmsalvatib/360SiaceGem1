@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ConfigCMS } from '../types';
+import { saveLeadToFirestore } from '../services/firebaseSync';
 import { 
   ShieldCheck, 
   UsersRound, 
@@ -32,9 +33,14 @@ export const WhyChooseUsSection: React.FC<WhyChooseUsSectionProps> = ({ config }
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setFormSubmitted(true);
-    setTimeout(() => {
-      // simulate receipt
-    }, 400);
+    saveLeadToFirestore({
+      nombre: formData.nombre,
+      organizacion: formData.organizacion,
+      email: formData.email,
+      telefono: formData.telefono,
+      servicio_interes: formData.servicioInteres,
+      mensaje: formData.mensaje
+    }).catch(err => console.error('Error saving lead to Firestore:', err));
   };
 
   const getPuntoIcon = (icono: string) => {

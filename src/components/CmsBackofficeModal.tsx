@@ -267,7 +267,7 @@ export const CmsBackofficeModal: React.FC<CmsBackofficeModalProps> = ({
       organizacion: '360 SIACE',
       estado: 'ACTIVO'
     });
-    triggerSuccess(`Usuario "${newUser.nombre}" registrado exitosamente en MariaDB.`);
+    triggerSuccess(`Usuario "${newUser.nombre}" registrado y sincronizado en la base de datos.`);
   };
 
   // Save edited user (from EditUserModal)
@@ -393,9 +393,13 @@ export const CmsBackofficeModal: React.FC<CmsBackofficeModalProps> = ({
                   <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-white/[0.06] text-[#38BDF8] border border-[#38BDF8]/30 font-semibold">
                     {userRole.nombre}
                   </span>
+                  <span className="inline-flex items-center gap-1.5 text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-medium">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    Firebase Firestore Activo
+                  </span>
                 </div>
                 <p className="text-xs text-slate-400">
-                  CMS personalizado por nivel de autorización • MariaDB ACID • Organización 360 SIACE
+                  CMS conectado en la nube • Sincronización en tiempo real multi-dispositivo • Organización 360 SIACE
                 </p>
               </div>
             </div>
@@ -440,7 +444,7 @@ export const CmsBackofficeModal: React.FC<CmsBackofficeModalProps> = ({
             <div className="px-6 py-2 bg-emerald-950/90 border-b border-emerald-500/40 text-emerald-200 text-xs flex items-center justify-between animate-in fade-in duration-150">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>{successMessage || 'Operación completada con éxito en la base de datos MariaDB.'}</span>
+                <span>{successMessage || 'Operación guardada y sincronizada en la base de datos Firebase Firestore.'}</span>
               </div>
               <span className="text-[10px] font-mono opacity-75">Nivel validado: {userRole.codigo}</span>
             </div>

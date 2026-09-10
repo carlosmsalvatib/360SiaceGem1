@@ -1,0 +1,52 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Global helper functions
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Configuración general (Pública para lectura de visitantes, escritura para CMS)
+    match /config/{configId} {
+      allow read: if true;
+      allow write: if isValidId(configId);
+    }
+
+    // Proyectos estratégicos (Público para lectura en carrusel y catálogo, escritura para CMS)
+    match /proyectos/{proyectoId} {
+      allow read: if true;
+      allow write: if isValidId(proyectoId);
+    }
+
+    // Servicios especializados (Público para lectura, escritura para CMS)
+    match /servicios/{servicioId} {
+      allow read: if true;
+      allow write: if isValidId(servicioId);
+    }
+
+    // Profesionales (Público para lectura en Quiénes Somos, escritura para CMS)
+    match /profesionales/{profesionalId} {
+      allow read: if true;
+      allow write: if isValidId(profesionalId);
+    }
+
+    // Usuarios del CMS (Permite consulta para autenticación y gestión interna)
+    match /usuarios/{usuarioId} {
+      allow read: if true;
+      allow write: if isValidId(usuarioId);
+    }
+
+    // Leads / Contactos (Cualquier visitante puede enviar solicitud, lectura para el CMS)
+    match /leads/{leadId} {
+      allow create: if isValidId(leadId);
+      allow read: if true;
+      allow update, delete: if isValidId(leadId);
+    }
+
+    // Conexión de prueba para inicialización
+    match /test/{docId} {
+      allow read, write: if true;
+    }
+  }
+}

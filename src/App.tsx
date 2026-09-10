@@ -31,6 +31,22 @@ import { ArchitectureModal } from './components/ArchitectureModal';
 import { CmsBackofficeModal } from './components/CmsBackofficeModal';
 import { EditProfesionalModal } from './components/EditProfesionalModal';
 import { EditProjectModal } from './components/EditProjectModal';
+import { 
+  seedFirestoreIfEmpty,
+  subscribeToConfig,
+  subscribeToProyectos,
+  subscribeToServicios,
+  subscribeToProfesionales,
+  subscribeToUsuarios,
+  saveConfigToFirestore,
+  saveProyectosToFirestore,
+  saveSingleProyectoToFirestore,
+  saveServiciosToFirestore,
+  saveProfesionalesToFirestore,
+  saveSingleProfesionalToFirestore,
+  saveUsuariosToFirestore
+} from './services/firebaseSync';
+import { testFirestoreConnection } from './lib/firebase';
 
 export default function App() {
   // Config state with localStorage persistence
@@ -102,26 +118,93 @@ export default function App() {
   // Direct edit project state (from Carrusel 3D, Ficha modal, or Projects section)
   const [directEditProject, setDirectEditProject] = useState<Proyecto | null>(null);
   const [isDirectAddProject, setIsDirectAddProject] = useState(false);
+  const [isCloudConnected, setIsCloudConnected] = useState(false);
 
-  // Persistence handlers
+  // Real-time Cloud Database synchronization via Firebase Firestore
+  useEffect(() => {
+    // 1. Test connection and auto-seed Firestore with default dataset if brand new database
+    testFirestoreConnection().then(connected => {
+      if (connected) setIsCloudConnected(true);
+    });
+    seedFirestoreIfEmpty().then(() => {
+      setIsCloudConnected(true);
+    }).catch(console.error);
+
+    // 2. Real-time subscriptions for immediate multi-device synchronization
+    const unsubConfig = subscribeToConfig((cloudConfig) => {
+      if (cloudConfig) {
+        setConfig(cloudConfig);
+        localStorage.setItem('360siace_config_cms', JSON.stringify(cloudConfig));
+      }
+    });
+
+    const unsubProyectos = subscribeToProyectos((cloudProyectos) => {
+      if (cloudProyectos && cloudProyectos.length > 0) {
+        setProyectos(cloudProyectos);
+        localStorage.setItem('360siace_proyectos', JSON.stringify(cloudProyectos));
+      }
+    });
+
+    const unsubServicios = subscribeToServicios((cloudServicios) => {
+      if (cloudServicios && cloudServicios.length > 0) {
+        setServicios(cloudServicios);
+        localStorage.setItem('360siace_servicios', JSON.stringify(cloudServicios));
+      }
+    });
+
+    const unsubProfesionales = subscribeToProfesionales((cloudProfesionales) => {
+      if (cloudProfesionales && cloudProfesionales.length > 0) {
+        setProfesionales(cloudProfesionales);
+        localStorage.setItem('360siace_profesionales', JSON.stringify(cloudProfesionales));
+      }
+    });
+
+    const unsubUsuarios = subscribeToUsuarios((cloudUsuarios) => {
+      if (cloudUsuarios && cloudUsuarios.length > 0) {
+        setUsuarios(cloudUsuarios);
+        localStorage.setItem('360siace_usuarios', JSON.stringify(cloudUsuarios));
+        if (currentUser) {
+          const updatedSelf = cloudUsuarios.find(u => u.id === currentUser.id);
+          if (updatedSelf) {
+            setCurrentUser(updatedSelf);
+            localStorage.setItem('360siace_current_user', JSON.stringify(updatedSelf));
+          }
+        }
+      }
+    });
+
+    return () => {
+      unsubConfig();
+      unsubProyectos();
+      unsubServicios();
+      unsubProfesionales();
+      unsubUsuarios();
+    };
+  }, []);
+
+  // Persistence handlers: Sync with localStorage and write to Firebase Firestore
   const handleUpdateConfig = (newConfig: ConfigCMS) => {
     setConfig(newConfig);
     localStorage.setItem('360siace_config_cms', JSON.stringify(newConfig));
+    saveConfigToFirestore(newConfig).catch(console.error);
   };
 
   const handleUpdateProyectos = (newProyectos: Proyecto[]) => {
     setProyectos(newProyectos);
     localStorage.setItem('360siace_proyectos', JSON.stringify(newProyectos));
+    saveProyectosToFirestore(newProyectos).catch(console.error);
   };
 
   const handleUpdateServicios = (newServicios: ServicioEspecializado[]) => {
     setServicios(newServicios);
     localStorage.setItem('360siace_servicios', JSON.stringify(newServicios));
+    saveServiciosToFirestore(newServicios).catch(console.error);
   };
 
   const handleUpdateProfesionales = (newProfesionales: Profesional[]) => {
     setProfesionales(newProfesionales);
     localStorage.setItem('360siace_profesionales', JSON.stringify(newProfesionales));
+    saveProfesionalesToFirestore(newProfesionales).catch(console.error);
   };
 
   // Direct save handler for EditProfesionalModal from TeamSection
@@ -134,6 +217,7 @@ export default function App() {
       updatedList = [...profesionales, savedProf];
     }
     handleUpdateProfesionales(updatedList);
+    saveSingleProfesionalToFirestore(savedProf).catch(console.error);
   };
 
   // Direct save handler for EditProjectModal (from Carousel 3D, Ficha modal, or Projects section)
@@ -149,6 +233,7 @@ export default function App() {
       updatedList = [...proyectos, savedProj];
     }
     handleUpdateProyectos(updatedList);
+    saveSingleProyectoToFirestore(savedProj).catch(console.error);
     setDirectEditProject(null);
     setIsDirectAddProject(false);
   };
@@ -156,6 +241,7 @@ export default function App() {
   const handleUpdateUsuarios = (newUsuarios: Usuario[]) => {
     setUsuarios(newUsuarios);
     localStorage.setItem('360siace_usuarios', JSON.stringify(newUsuarios));
+    saveUsuariosToFirestore(newUsuarios).catch(console.error);
     if (currentUser) {
       const updatedSelf = newUsuarios.find(u => u.id === currentUser.id);
       if (updatedSelf) {

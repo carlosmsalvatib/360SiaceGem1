@@ -1,0 +1,154 @@
+{
+  "entities": {
+    "ConfigCMS": {
+      "title": "ConfigCMS",
+      "description": "Configuración global de la plataforma, textos hero, datos de contacto y métricas corporativas",
+      "type": "object",
+      "properties": {
+        "hero_tagline": { "type": "string", "maxLength": 300 },
+        "hero_titulo": { "type": "string", "maxLength": 300 },
+        "hero_subtitulo": { "type": "string", "maxLength": 500 },
+        "hero_parrafo_apoyo": { "type": "string", "maxLength": 1000 },
+        "por_que_elegirnos_intro": { "type": "string", "maxLength": 1000 },
+        "por_que_elegirnos_puntos": { "type": "array" },
+        "cta_titulo": { "type": "string", "maxLength": 300 },
+        "cta_descripcion": { "type": "string", "maxLength": 1000 },
+        "cta_telefono": { "type": "string", "maxLength": 100 },
+        "cta_email": { "type": "string", "maxLength": 150 },
+        "cta_direccion": { "type": "string", "maxLength": 300 },
+        "dominio_oficial": { "type": "string", "maxLength": 150 },
+        "modelo_operativo_nombre": { "type": "string", "maxLength": 200 }
+      },
+      "required": ["hero_titulo", "cta_email", "dominio_oficial"]
+    },
+    "Proyecto": {
+      "title": "Proyecto",
+      "description": "Proyectos estratégicos para el carrusel 3D, catálogo y fichas de auditoría técnica",
+      "type": "object",
+      "properties": {
+        "id": { "type": "number" },
+        "codigo": { "type": "string", "maxLength": 100 },
+        "nombre": { "type": "string", "maxLength": 250 },
+        "subtitulo": { "type": "string", "maxLength": 350 },
+        "categoria": { "type": "string", "maxLength": 150 },
+        "descripcion_corta": { "type": "string", "maxLength": 1000 },
+        "descripcion_larga": { "type": "string", "maxLength": 5000 },
+        "impacto_social": { "type": "string", "maxLength": 1500 },
+        "estado": { "type": "string", "enum": ["EN_EJECUCION", "COMPLETADO", "PLANIFICACION", "AUDITORIA"] },
+        "avance_porcentaje": { "type": "number" },
+        "beneficiarios_directos": { "type": "number" },
+        "inversion_estimada_usd": { "type": "number" },
+        "ubicacion": { "type": "string", "maxLength": 250 },
+        "cooperantes_clave": { "type": "array" },
+        "imagen_url": { "type": "string", "maxLength": 2000 },
+        "imagen_origen": { "type": "string", "maxLength": 100 },
+        "color_accent": { "type": "string", "maxLength": 50 },
+        "icono": { "type": "string", "maxLength": 100 },
+        "auditoria_estado": { "type": "string", "enum": ["CONFORME", "OBSERVADO", "EN_REVISION", "PENDIENTE"] },
+        "auditor_responsable": { "type": "string", "maxLength": 150 },
+        "auditoria_notas": { "type": "string", "maxLength": 3000 }
+      },
+      "required": ["codigo", "nombre", "categoria", "estado"]
+    },
+    "ServicioEspecializado": {
+      "title": "ServicioEspecializado",
+      "description": "Catálogo de servicios fiduciarios, de ingeniería y auditoría de 360 SIACE",
+      "type": "object",
+      "properties": {
+        "id": { "type": "number" },
+        "numero": { "type": "number" },
+        "area_id": { "type": "string", "maxLength": 100 },
+        "titulo": { "type": "string", "maxLength": 250 },
+        "descripcion": { "type": "string", "maxLength": 1500 },
+        "entregables": { "type": "array" },
+        "normativas_referencia": { "type": "string", "maxLength": 500 },
+        "icono": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["area_id", "titulo", "descripcion"]
+    },
+    "Profesional": {
+      "title": "Profesional",
+      "description": "Equipo directivo, auditores y especialistas multidisciplinarios",
+      "type": "object",
+      "properties": {
+        "id": { "type": "number" },
+        "nombre": { "type": "string", "maxLength": 200 },
+        "cargo": { "type": "string", "maxLength": 200 },
+        "departamento": { "type": "string", "maxLength": 200 },
+        "especialidad": { "type": "string", "maxLength": 250 },
+        "biografia": { "type": "string", "maxLength": 3000 },
+        "certificaciones": { "type": "array" },
+        "experiencia_anos": { "type": "number" },
+        "foto_url": { "type": "string", "maxLength": 2000 },
+        "foto_origen": { "type": "string", "maxLength": 100 },
+        "email_corporativo": { "type": "string", "maxLength": 150 },
+        "orden_visual": { "type": "number" }
+      },
+      "required": ["nombre", "cargo", "departamento"]
+    },
+    "Usuario": {
+      "title": "Usuario",
+      "description": "Usuarios con acceso a roles administrativos y de auditoría en el CMS",
+      "type": "object",
+      "properties": {
+        "id": { "type": "number" },
+        "nombre": { "type": "string", "maxLength": 200 },
+        "email": { "type": "string", "maxLength": 150 },
+        "password_hash": { "type": "string", "maxLength": 250 },
+        "rol_id": { "type": "number" },
+        "rol_nombre": { "type": "string", "maxLength": 100 },
+        "cargo": { "type": "string", "maxLength": 150 },
+        "telefono": { "type": "string", "maxLength": 100 },
+        "organizacion": { "type": "string", "maxLength": 200 },
+        "avatar_url": { "type": "string", "maxLength": 2000 },
+        "avatar_origen": { "type": "string", "maxLength": 100 },
+        "estado": { "type": "string", "enum": ["ACTIVO", "INACTIVO", "SUSPENDIDO"] },
+        "ultimo_acceso": { "type": "string", "maxLength": 100 },
+        "creado_en": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["nombre", "email", "rol_id", "estado"]
+    },
+    "Lead": {
+      "title": "Lead",
+      "description": "Solicitudes de cotización y mensajes de contacto enviados por prospectos",
+      "type": "object",
+      "properties": {
+        "nombre": { "type": "string", "maxLength": 200 },
+        "email": { "type": "string", "maxLength": 150 },
+        "telefono": { "type": "string", "maxLength": 100 },
+        "organizacion": { "type": "string", "maxLength": 200 },
+        "servicio_interes": { "type": "string", "maxLength": 250 },
+        "mensaje": { "type": "string", "maxLength": 3000 },
+        "fecha": { "type": "string", "maxLength": 100 },
+        "estado": { "type": "string", "enum": ["NUEVO", "CONTACTADO", "EN_COTIZACION", "CERRADO"] }
+      },
+      "required": ["nombre", "email", "mensaje"]
+    }
+  },
+  "firestore": {
+    "/config/{configId}": {
+      "schema": "ConfigCMS",
+      "description": "Almacena la configuración general institucional del CMS"
+    },
+    "/proyectos/{proyectoId}": {
+      "schema": "Proyecto",
+      "description": "Colección de proyectos estratégicos con avance y auditoría"
+    },
+    "/servicios/{servicioId}": {
+      "schema": "ServicioEspecializado",
+      "description": "Catálogo de los 10 servicios fiduciarios y de ingeniería"
+    },
+    "/profesionales/{profesionalId}": {
+      "schema": "Profesional",
+      "description": "Miembros del equipo multidisciplinario en Quiénes Somos"
+    },
+    "/usuarios/{usuarioId}": {
+      "schema": "Usuario",
+      "description": "Cuentas autorizadas para gestionar el CMS de 360 SIACE"
+    },
+    "/leads/{leadId}": {
+      "schema": "Lead",
+      "description": "Formularios de contacto y solicitudes de auditoría/cotización recibidas"
+    }
+  }
+}
