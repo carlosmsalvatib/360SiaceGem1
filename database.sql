@@ -3,8 +3,9 @@
 -- SISTEMA DE GESTIÓN CÓDIGO-58 v2.0
 -- ============================================
 
-CREATE DATABASE IF NOT EXISTS consultoria_mof;
-USE consultoria_mof;
+-- Si se ejecuta en local XAMPP sin base de datos creada, descomente las siguientes 2 líneas:
+-- CREATE DATABASE IF NOT EXISTS consultoria_mof;
+-- USE consultoria_mof;
 
 -- ============================================
 -- TABLA: usuarios (para autenticación)
@@ -268,3 +269,29 @@ INSERT INTO catalogo_servicios (nombre, categoria, descripcion, activo) VALUES
 ('Marketing Digital y Redes Sociales', 'Marketing y Ventas', 'Estrategia de contenidos, pauta publicitaria y gestión de comunidades.', 1),
 ('Plan de Negocios y Estructuración Financiera', 'Consultoría Estratégica', 'Formulación de planes de negocios y modelos de monetización.', 1),
 ('Registro de Marca y Propiedad Intelectual', 'Legal y Corporativo', 'Protección de marcas, patentes y derechos de autor ante el SAPI.', 1);
+
+-- Emprendedores de Demostración para el Directorio
+INSERT INTO clientes (id, identificacion, nombre_completo, email, telefono, direccion, nombre_empresa, servicios_ofrecidos, industria, status, usuario_id_creacion) VALUES
+(1, 'V-18234567', 'Yamileth Aparicio', 'yami@gmail.com', '+58 424-7352525', 'La Machiri, Residencia San Juan Bautista 3', 'Yami Software & Design', 'Desarrollo de Software y Apps, Marketing Digital y Redes Sociales', 'Tecnología', 'activo', 1),
+(2, 'V-20123456', 'Carlos Méndez', 'carlos.m@emprendimiento.ve', '+58 412-1234567', 'Av. Las Delicias, Centro Empresarial Maracay', 'Méndez Consultores & Asociados', 'Constitución de Empresas y Registro Mercantil, Asesoría Tributaria y Fiscal', 'Legal y Fiscal', 'activo', 1),
+(3, 'V-15890123', 'Elena Gómez', 'elena.gomez@creativos58.com', '+58 414-9876543', 'Urb. Los Palos Grandes, Edif. Torre Parque', 'Estudio Creativo 58', 'Marketing Digital y Redes Sociales, Registro de Marca y Propiedad Intelectual', 'Publicidad y Creatividad', 'en_consulta', 1)
+ON DUPLICATE KEY UPDATE nombre_completo=VALUES(nombre_completo);
+
+-- Asesorías de Demostración
+INSERT INTO asesorias (cliente_id, consultor_id, tipo, fecha_programada, fecha_realizada, duracion_minutos, tema, status) VALUES
+(1, 1, 'diagnostico', DATE_SUB(NOW(), INTERVAL 5 DAY), DATE_SUB(NOW(), INTERVAL 5 DAY), 60, 'Diagnóstico inicial de modelo digital y registro de marca', 'realizada'),
+(2, 2, 'seguimiento', DATE_SUB(NOW(), INTERVAL 2 DAY), DATE_SUB(NOW(), INTERVAL 2 DAY), 45, 'Revisión de actas constitutivas y balance de apertura', 'realizada'),
+(3, 1, 'diagnostico', DATE_ADD(NOW(), INTERVAL 3 DAY), NULL, 60, 'Estructuración de propuesta comercial y marketing', 'programada')
+ON DUPLICATE KEY UPDATE tema=VALUES(tema);
+
+-- Procesos Legales de Demostración
+INSERT INTO procesos_legales (cliente_id, gestor_id, tipo_proceso, nombre_comercial, documento_identidad, estado, status) VALUES
+(1, 3, 'Registro de Marca', 'Yami Software', 'V-18234567', 'En estudio de fondo SAPI', 'en_proceso'),
+(2, 3, 'Constitución C.A.', 'Méndez Consultores C.A.', 'V-20123456', 'Firma en Registro Mercantil Primero', 'en_proceso')
+ON DUPLICATE KEY UPDATE nombre_comercial=VALUES(nombre_comercial);
+
+-- Contratos de Demostración
+INSERT INTO contratos (cliente_id, comercial_id, numero_contrato, fecha_firma, monto_total, anticipo, saldo_pendiente, estado_pago, estado_contrato) VALUES
+(1, 4, 'CTR-2026-001', CURDATE(), 500.00, 250.00, 250.00, 'parcial', 'activo'),
+(2, 4, 'CTR-2026-002', CURDATE(), 800.00, 800.00, 0.00, 'pagado', 'activo')
+ON DUPLICATE KEY UPDATE monto_total=VALUES(monto_total);

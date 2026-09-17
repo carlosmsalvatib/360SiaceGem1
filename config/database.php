@@ -7,19 +7,49 @@ if (!defined('DB_PASS')) define('DB_PASS', getenv('DB_PASS') !== false ? getenv(
 if (!defined('DB_NAME')) define('DB_NAME', getenv('DB_NAME') ?: (isset($_ENV['DB_NAME']) ? $_ENV['DB_NAME'] : 'consultoria_mof'));
 if (!defined('DB_PORT')) define('DB_PORT', intval(getenv('DB_PORT') ?: (isset($_ENV['DB_PORT']) ? $_ENV['DB_PORT'] : 3306)));
 
+// Soporte SSL para bases de datos en la nube (TiDB Cloud, Aiven, AWS RDS, etc.)
+if (!defined('DB_SSL')) {
+    $envSsl = getenv('DB_SSL') !== false ? getenv('DB_SSL') : (isset($_ENV['DB_SSL']) ? $_ENV['DB_SSL'] : null);
+    if ($envSsl !== null) {
+        define('DB_SSL', filter_var($envSsl, FILTER_VALIDATE_BOOLEAN));
+    } else {
+        $host = DB_HOST;
+        $isCloudHost = (strpos($host, 'tidbcloud') !== false || strpos($host, 'aivencloud') !== false || DB_PORT == 4000);
+        define('DB_SSL', $isCloudHost);
+    }
+}
+
 // Clase para manejar la conexión
 class Database {
     private static $instance = null;
     private $connection;
     
     private function __construct() {
-        // Suprimir warning nativo de mysqli para manejarlo con excepción limpia
+        // Suprimir warning nativo de mysqli para manejarlo limpiamente
         mysqli_report(MYSQLI_REPORT_OFF);
         
-        $this->connection = @new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
+        $this->connection = mysqli_init();
+        if (!$this->connection) {
+            $this->renderDatabaseError('No se pudo inicializar el driver MySQLi en PHP.');
+            exit;
+        }
         
-        if ($this->connection->connect_error) {
-            $this->renderDatabaseError($this->connection->connect_error);
+        $flags = 0;
+        if (DB_SSL) {
+            $this->connection->ssl_set(NULL, NULL, NULL, NULL, NULL);
+            if (defined('MYSQLI_OPT_SSL_VERIFY_SERVER_CERT')) {
+                $this->connection->options(MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, false);
+            }
+            $flags = MYSQLI_CLIENT_SSL;
+        }
+        
+        $this->connection->options(MYSQLI_OPT_CONNECT_TIMEOUT, 10);
+        
+        $success = @$this->connection->real_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT, NULL, $flags);
+        
+        if (!$success || $this->connection->connect_error) {
+            $errorMsg = $this->connection->connect_error ?: 'No fue posible establecer conexión con el servidor MySQL.';
+            $this->renderDatabaseError($errorMsg);
             exit;
         }
         
@@ -80,30 +110,76 @@ class Database {
                     <p class="mb-0 text-light opacity-75">Configuración de Conexión a Base de Datos</p>
                 </div>
                 <div class="p-4 p-md-5">
-                    <div class="alert alert-warning d-flex align-items-center mb-4">
-                        <i class="fas fa-exclamation-triangle fs-4 me-3"></i>
+                    <div class="alert alert-warning d-flex align-items-center mb-3">
+                        <i class="fas fa-exclamation-triangle fs-4 me-3 text-warning"></i>
                         <div>
-                            <strong>No se pudo conectar a la base de datos MySQL</strong><br>
-                            <small class="text-muted"><?php echo htmlspecialchars($errorMsg); ?> (Host intentado: <code><?php echo htmlspecialchars(DB_HOST); ?></code>)</small>
+                            <strong>No se pudo conectar al servidor MySQL</strong><br>
+                            <small class="text-muted"><?php echo htmlspecialchars($errorMsg); ?></small>
+                        </div>
+                    </div>
+
+                    <div class="card bg-light border-0 mb-4 p-3 rounded-3 small">
+                        <div class="fw-bold mb-2 text-dark"><i class="fas fa-info-circle text-primary me-1"></i> Diagnóstico de Parámetros Actuales:</div>
+                        <div class="row g-2">
+                            <div class="col-6"><strong>DB_HOST:</strong> <code><?php echo htmlspecialchars(DB_HOST); ?></code></div>
+                            <div class="col-6"><strong>DB_PORT:</strong> <code><?php echo htmlspecialchars(DB_PORT); ?></code></div>
+                            <div class="col-6"><strong>DB_USER:</strong> <code><?php echo htmlspecialchars(DB_USER); ?></code></div>
+                            <div class="col-6"><strong>DB_NAME:</strong> <code><?php echo htmlspecialchars(DB_NAME); ?></code></div>
+                            <div class="col-12"><strong>SSL / TLS:</strong> <code><?php echo DB_SSL ? 'Activado (Requerido para Cloud)' : 'Desactivado'; ?></code></div>
                         </div>
                     </div>
 
                     <?php if ($isVercel || DB_HOST !== 'localhost'): ?>
-                    <h5 class="fw-bold text-dark mb-2"><i class="fas fa-cloud me-2 text-primary"></i>Configuración en Vercel</h5>
-                    <p class="text-muted small">
-                        Para habilitar la base de datos en la nube (ej. TiDB Serverless, Aiven, PlanetScale o cPanel MySQL), ingresa en tu panel de Vercel en <strong>Project Settings &rarr; Environment Variables</strong> y define:
+                    <h5 class="fw-bold text-dark mb-2"><i class="fas fa-cloud me-2 text-teal" style="color: #008080;"></i>Paso para conectar tu Base de Datos en la Nube</h5>
+                    <p class="text-muted small mb-3">
+                        Vercel ejecuta la aplicación de forma <em>serverless</em>, por lo que requiere una base de datos MySQL en la nube. Configura las siguientes variables en <strong>Vercel &rarr; Project Settings &rarr; Environment Variables</strong>:
                     </p>
-                    <div class="code-box mb-4">
+                    
+                    <div class="code-box mb-3">
                         DB_HOST = [tu-servidor-mysql-en-la-nube]<br>
                         DB_USER = [tu-usuario-mysql]<br>
                         DB_PASS = [tu-contrasena-mysql]<br>
                         DB_NAME = [tu-base-de-datos]<br>
-                        DB_PORT = 3306
+                        DB_PORT = 3306 (o 4000 para TiDB)<br>
+                        DB_SSL  = true
+                    </div>
+
+                    <div class="accordion mb-4" id="optionsAccordion">
+                        <div class="accordion-item border rounded mb-2">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed py-2 small fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#opt1">
+                                    <i class="fab fa-github text-dark me-2"></i> Opción A: TiDB Cloud Serverless (Recomendada, Gratis)
+                                </button>
+                            </h2>
+                            <div id="opt1" class="accordion-collapse collapse" data-bs-parent="#optionsAccordion">
+                                <div class="accordion-body small text-muted">
+                                    1. Regístrate gratis en <a href="https://tidbcloud.com" target="_blank">tidbcloud.com</a> con tu cuenta GitHub.<br>
+                                    2. Crea un cluster <strong>Serverless</strong> (gratuito, sin tarjeta de crédito).<br>
+                                    3. En la pestaña <strong>SQL Editor</strong>, ejecuta el archivo <code>database.sql</code> de tu repositorio.<br>
+                                    4. Pulsa <strong>Connect</strong> y copia el Host, Puerto (4000), Usuario y Contraseña en las Environment Variables de Vercel.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item border rounded">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed py-2 small fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#opt2">
+                                    <i class="fas fa-server text-secondary me-2"></i> Opción B: cPanel / Hosting de 360siace.com
+                                </button>
+                            </h2>
+                            <div id="opt2" class="accordion-collapse collapse" data-bs-parent="#optionsAccordion">
+                                <div class="accordion-body small text-muted">
+                                    1. Entra a tu cPanel de <code>360siace.com</code> &rarr; Bases de Datos MySQL.<br>
+                                    2. Crea la base de datos y usuario, e importa <code>database.sql</code> en phpMyAdmin.<br>
+                                    3. En cPanel &rarr; <strong>MySQL Remoto</strong>, autoriza <code>%</code> para permitir accesos externos.<br>
+                                    4. Coloca el host de tu servidor, usuario, clave y base de datos en Vercel.
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <?php else: ?>
                     <h5 class="fw-bold text-dark mb-2"><i class="fas fa-server me-2 text-success"></i>Configuración Local</h5>
                     <p class="text-muted small">
-                        Si estás en un entorno local, asegúrate de que MySQL / MariaDB esté iniciado en XAMPP o en tu servicio local.
+                        Si estás en tu equipo local, asegúrate de que Apache y MySQL / MariaDB estén iniciados en el panel de XAMPP.
                     </p>
                     <?php endif; ?>
 
