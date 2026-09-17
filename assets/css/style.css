@@ -1,0 +1,495 @@
+/* ===================================================
+   SISTEMA DE GESTIÓN CÓDIGO-58 - ESTILOS CORPORATIVOS
+   Paleta de Identidad Gráfica Oficial:
+   - Azul Marino / Midnight Navy: #161938 / #1E224F
+   - Verde Azulado / Persian Teal: #008080 / #0D9488
+   - Amarillo Ámbar / Warm Gold: #F59E0B / #F4A213
+   - Púrpura Real / Deep Violet: #4A154B / #581C87
+   - Fondo y Neutros: #F8FAFC, #FFFFFF, #64748B
+   =================================================== */
+
+:root {
+    --c58-navy: #161938;
+    --c58-navy-light: #1E224F;
+    --c58-navy-dark: #0F1126;
+    --c58-teal: #008080;
+    --c58-teal-hover: #006b6b;
+    --c58-teal-light: #E6F4F4;
+    --c58-amber: #F59E0B;
+    --c58-amber-hover: #D97706;
+    --c58-amber-light: #FEF3C7;
+    --c58-violet: #4A154B;
+    --c58-violet-hover: #381039;
+    --c58-violet-light: #F3E8FF;
+    --c58-bg: #F8FAFC;
+    --c58-card-bg: #FFFFFF;
+    --c58-text-main: #1E293B;
+    --c58-text-muted: #64748B;
+    --c58-border: #E2E8F0;
+    --c58-radius: 12px;
+    --c58-shadow: 0 4px 20px -2px rgba(22, 25, 56, 0.08);
+    --c58-shadow-hover: 0 10px 25px -3px rgba(22, 25, 56, 0.14);
+}
+
+body {
+    background-color: var(--c58-bg);
+    color: var(--c58-text-main);
+    font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===================================================
+   NAVBAR CORPORATIVO CÓDIGO-58
+   =================================================== */
+.navbar-c58 {
+    background: linear-gradient(135deg, var(--c58-navy) 0%, var(--c58-navy-light) 65%, #241E5C 100%);
+    box-shadow: 0 4px 20px rgba(22, 25, 56, 0.25);
+    padding: 0.65rem 1.25rem;
+    border-bottom: 2px solid var(--c58-teal);
+}
+
+.navbar-c58 .navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: 0.5px;
+    color: #FFFFFF !important;
+}
+
+.navbar-c58 .navbar-brand img.logo-img {
+    height: 44px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    background: #FFFFFF;
+    padding: 3px;
+    border-radius: 8px;
+}
+
+.navbar-c58 .brand-title {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+
+.navbar-c58 .brand-title .brand-main {
+    color: #FFFFFF;
+    font-size: 1.15rem;
+    font-weight: 800;
+}
+
+.navbar-c58 .brand-title .brand-accent {
+    color: var(--c58-amber);
+}
+
+.navbar-c58 .brand-title .brand-sub {
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: #94A3B8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.navbar-c58 .nav-link {
+    color: #CBD5E1 !important;
+    font-weight: 500;
+    font-size: 0.92rem;
+    padding: 0.6rem 0.9rem !important;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.navbar-c58 .nav-link:hover,
+.navbar-c58 .nav-link.active {
+    color: #FFFFFF !important;
+    background: rgba(0, 128, 128, 0.25);
+    border-bottom: 2px solid var(--c58-teal);
+}
+
+.navbar-c58 .nav-link.nav-directorio {
+    background: rgba(245, 158, 11, 0.15);
+    color: #FDE68A !important;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.navbar-c58 .nav-link.nav-directorio:hover {
+    background: var(--c58-amber);
+    color: #0F172A !important;
+}
+
+.navbar-c58 .nav-link.nav-cms {
+    background: rgba(74, 21, 75, 0.35);
+    color: #F3E8FF !important;
+    border: 1px solid rgba(168, 85, 247, 0.4);
+}
+
+.navbar-c58 .nav-link.nav-cms:hover {
+    background: var(--c58-violet);
+    color: #FFFFFF !important;
+}
+
+.user-badge-nav {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 25px;
+    padding: 4px 14px;
+}
+
+/* ===================================================
+   TARJETAS Y CONTENEDORES
+   =================================================== */
+.card {
+    background-color: var(--c58-card-bg);
+    border: 1px solid var(--c58-border);
+    border-radius: var(--c58-radius);
+    box-shadow: var(--c58-shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden;
+}
+
+.card:hover {
+    box-shadow: var(--c58-shadow-hover);
+}
+
+.card-header {
+    background-color: #FFFFFF;
+    border-bottom: 1px solid var(--c58-border);
+    padding: 1rem 1.25rem;
+    font-weight: 600;
+}
+
+.card-header.bg-c58-navy {
+    background: linear-gradient(135deg, var(--c58-navy) 0%, var(--c58-navy-light) 100%);
+    color: #FFFFFF;
+}
+
+.card-header.bg-c58-teal {
+    background: linear-gradient(135deg, var(--c58-teal) 0%, #0D9488 100%);
+    color: #FFFFFF;
+}
+
+/* Tarjetas de Estadísticas (Stats Cards) */
+.stats-card {
+    border-left: 5px solid var(--c58-teal);
+    padding: 1.1rem;
+    background: #FFFFFF;
+    border-radius: 10px;
+    box-shadow: var(--c58-shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+.stats-card.navy {
+    border-left-color: var(--c58-navy);
+}
+
+.stats-card.teal {
+    border-left-color: var(--c58-teal);
+}
+
+.stats-card.amber {
+    border-left-color: var(--c58-amber);
+}
+
+.stats-card.violet {
+    border-left-color: var(--c58-violet);
+}
+
+.stats-card.danger {
+    border-left-color: #EF4444;
+}
+
+.stats-card.success {
+    border-left-color: #10B981;
+}
+
+.stats-card .card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+}
+
+.stats-card .stat-value {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--c58-navy);
+}
+
+/* ===================================================
+   BOTONES CORPORATIVOS
+   =================================================== */
+.btn {
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-primary, .btn-c58-teal {
+    background-color: var(--c58-teal);
+    border-color: var(--c58-teal);
+    color: #FFFFFF;
+}
+
+.btn-primary:hover, .btn-c58-teal:hover {
+    background-color: var(--c58-teal-hover);
+    border-color: var(--c58-teal-hover);
+    color: #FFFFFF;
+    transform: translateY(-1px);
+}
+
+.btn-c58-navy {
+    background-color: var(--c58-navy);
+    border-color: var(--c58-navy);
+    color: #FFFFFF;
+}
+
+.btn-c58-navy:hover {
+    background-color: var(--c58-navy-light);
+    border-color: var(--c58-navy-light);
+    color: #FFFFFF;
+}
+
+.btn-warning, .btn-c58-amber {
+    background-color: var(--c58-amber);
+    border-color: var(--c58-amber);
+    color: #0F172A;
+}
+
+.btn-warning:hover, .btn-c58-amber:hover {
+    background-color: var(--c58-amber-hover);
+    border-color: var(--c58-amber-hover);
+    color: #0F172A;
+}
+
+.btn-c58-violet {
+    background-color: var(--c58-violet);
+    border-color: var(--c58-violet);
+    color: #FFFFFF;
+}
+
+.btn-c58-violet:hover {
+    background-color: var(--c58-violet-hover);
+    border-color: var(--c58-violet-hover);
+    color: #FFFFFF;
+}
+
+/* ===================================================
+   BADGES Y ESTADOS
+   =================================================== */
+.badge {
+    padding: 0.4em 0.75em;
+    font-weight: 600;
+    font-size: 0.75rem;
+    border-radius: 6px;
+    letter-spacing: 0.3px;
+}
+
+.badge-c58-navy {
+    background-color: var(--c58-navy);
+    color: #FFFFFF;
+}
+
+.badge-c58-teal {
+    background-color: var(--c58-teal-light);
+    color: var(--c58-teal);
+    border: 1px solid rgba(0, 128, 128, 0.3);
+}
+
+.badge-c58-amber {
+    background-color: var(--c58-amber-light);
+    color: #92400E;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.badge-c58-violet {
+    background-color: var(--c58-violet-light);
+    color: var(--c58-violet);
+    border: 1px solid rgba(74, 21, 75, 0.3);
+}
+
+/* ===================================================
+   TABLAS Y DATATABLES
+   =================================================== */
+.table {
+    vertical-align: middle;
+    margin-bottom: 0;
+}
+
+.table thead th {
+    background-color: #F1F5F9;
+    color: var(--c58-navy);
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid var(--c58-border);
+    padding: 0.75rem 1rem;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 128, 128, 0.04);
+}
+
+.dataTables_wrapper .dataTables_filter input,
+.dataTables_wrapper .dataTables_length select {
+    border-radius: 8px;
+    border: 1px solid var(--c58-border);
+    padding: 0.4rem 0.8rem;
+    outline: none;
+}
+
+.dataTables_wrapper .dataTables_filter input:focus {
+    border-color: var(--c58-teal);
+    box-shadow: 0 0 0 3px rgba(0, 128, 128, 0.15);
+}
+
+.page-item.active .page-link {
+    background-color: var(--c58-teal);
+    border-color: var(--c58-teal);
+}
+
+/* ===================================================
+   FORMULARIOS
+   =================================================== */
+.form-label {
+    color: var(--c58-navy);
+    font-weight: 600;
+    font-size: 0.88rem;
+    margin-bottom: 0.35rem;
+}
+
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 1px solid var(--c58-border);
+    padding: 0.55rem 0.85rem;
+    font-size: 0.92rem;
+    transition: all 0.2s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--c58-teal);
+    box-shadow: 0 0 0 3px rgba(0, 128, 128, 0.15);
+}
+
+/* ===================================================
+   DIRECTORIO DE EMPRENDEDORES (ESPECÍFICO)
+   =================================================== */
+.directorio-hero {
+    background: linear-gradient(135deg, var(--c58-navy) 0%, #1E2B4D 60%, var(--c58-teal) 100%);
+    color: #FFFFFF;
+    padding: 2rem;
+    border-radius: var(--c58-radius);
+    margin-bottom: 1.5rem;
+    box-shadow: var(--c58-shadow);
+}
+
+.directorio-hero h2 {
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.directorio-search-box {
+    background: #FFFFFF;
+    padding: 1.25rem;
+    border-radius: var(--c58-radius);
+    box-shadow: 0 10px 25px rgba(22, 25, 56, 0.1);
+    margin-top: 1rem;
+}
+
+.service-tag {
+    display: inline-block;
+    background: var(--c58-teal-light);
+    color: var(--c58-teal);
+    border: 1px solid rgba(0, 128, 128, 0.25);
+    border-radius: 20px;
+    padding: 2px 10px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    margin: 2px;
+}
+
+.contact-btn-whatsapp {
+    background-color: #25D366;
+    color: #FFFFFF;
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 600;
+}
+
+.contact-btn-whatsapp:hover {
+    background-color: #1EBE5D;
+    color: #FFFFFF;
+}
+
+/* ===================================================
+   FOOTER CORPORATIVO
+   =================================================== */
+.footer-c58 {
+    background-color: #FFFFFF;
+    border-top: 1px solid var(--c58-border);
+    padding: 1.25rem 0;
+    margin-top: auto;
+    font-size: 0.85rem;
+    color: var(--c58-text-muted);
+}
+
+.footer-c58 a {
+    color: var(--c58-teal);
+    text-decoration: none;
+}
+
+.footer-c58 a:hover {
+    text-decoration: underline;
+}
+
+/* ===================================================
+   ANIMACIONES & UTILIDADES
+   =================================================== */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeIn 0.35s ease-out;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #F1F5F9;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+}

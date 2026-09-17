@@ -1,0 +1,174 @@
+/* Estilos generales */
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Tarjetas del dashboard */
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 30px rgba(0,0,0,0.12);
+}
+
+.card-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+/* Estilos para tablas */
+.table {
+    margin-bottom: 0;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(13, 110, 253, 0.05);
+}
+
+/* Estilos para formularios */
+.form-control, .form-select {
+    border-radius: 8px;
+    padding: 10px 15px;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+
+/* Botones */
+.btn {
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 500;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #0d6efd, #0a58ca);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #198754, #146c43);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #dc3545, #b02a37);
+}
+
+/* Badges de estado */
+.badge {
+    padding: 6px 12px;
+    font-weight: 500;
+}
+
+/* Navegación */
+.navbar {
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    font-weight: 600;
+}
+
+/* Sidebar de estadísticas */
+.stats-card {
+    border-left: 4px solid #0d6efd;
+    padding: 15px 20px;
+}
+
+.stats-card.success {
+    border-left-color: #198754;
+}
+
+.stats-card.warning {
+    border-left-color: #ffc107;
+}
+
+.stats-card.danger {
+    border-left-color: #dc3545;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .card-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+    
+    .stats-card {
+        padding: 10px 15px;
+    }
+}
+
+/* Personalización de DataTables */
+.dataTables_wrapper .dataTables_filter input {
+    border-radius: 8px;
+    padding: 8px 15px;
+    border: 1px solid #ced4da;
+}
+
+.dataTables_wrapper .dataTables_length select {
+    border-radius: 8px;
+    padding: 8px 15px;
+}
+
+/* Select2 personalizado */
+.select2-container--bootstrap-5 .select2-selection {
+    border-radius: 8px;
+    padding: 6px;
+}
+
+/* SweetAlert2 */
+.swal2-popup {
+    border-radius: 15px;
+}
+
+/* Footer fijo al final */
+.footer {
+    background-color: #fff;
+    border-top: 1px solid #dee2e6;
+    padding: 20px 0;
+    margin-top: 30px;
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c7cd;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8b0b8;
+}

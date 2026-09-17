@@ -1,0 +1,7 @@
+modules/clientes/
+├── index.php          # Lista de clientes con filtros
+├── crear.php          # Formulario para nuevo cliente
+├── ver.php            # Detalles completos del cliente
+├── editar.php         # Formulario para editar
+├── interaccion.php    # Registrar interacción con cliente
+└── eliminar.php       # Eliminar cliente (con verificación)

@@ -1,0 +1,23 @@
+consultoria_mof/
+├── config/
+│   ├── database.php
+│   └── config.php
+├── assets/
+│   ├── css/
+│   │   └── style.css
+│   ├── js/
+│   │   └── script.js
+│   └── img/
+├── includes/
+│   ├── header.php
+│   ├── footer.php
+│   └── functions.php
+├── modules/
+│   ├── dashboard/
+│   ├── clientes/
+│   ├── consultores/
+│   ├── legales/
+│   ├── comerciales/
+│   └── reportes/
+├── index.php
+└── login.php

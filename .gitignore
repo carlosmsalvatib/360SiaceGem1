@@ -1,0 +1,6 @@
+.env
+.vercel
+/node_modules
+*.log
+scratch/
+cookie.txt

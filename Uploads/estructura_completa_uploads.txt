@@ -1,0 +1,18 @@
+uploads/
+├── documentos/          # Documentos legales
+│   ├── actas/
+│   ├── estatutos/
+│   ├── registros/
+│   └── otros/
+├── comprobantes/        # Comprobantes de pago
+│   ├── transferencias/
+│   ├── facturas/
+│   └── recibos/
+├── temporales/          # Archivos temporales
+├── perfiles/           # Fotos de perfil
+│   └── clientes/
+├── .htaccess           # Configuración de seguridad
+├── index.php           # Archivo de seguridad
+└── clientes/           # Subdirectorios por cliente (creados dinámicamente)
+    └── [cliente_id]/
+        └── documentos/
