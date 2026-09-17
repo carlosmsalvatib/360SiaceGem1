@@ -4,7 +4,7 @@
 $isVercelEnv = !empty(getenv('VERCEL')) || !empty($_ENV['VERCEL']);
 
 if (!defined('DB_HOST')) define('DB_HOST', getenv('DB_HOST') ?: (isset($_ENV['DB_HOST']) ? $_ENV['DB_HOST'] : ($isVercelEnv ? '45.79.40.132' : 'localhost')));
-if (!defined('DB_USER')) define('DB_USER', getenv('DB_USER') ?: (isset($_ENV['DB_USER']) ? $_ENV['DB_USER'] : ($isVercelEnv ? 'siacecom_C58admin' : 'root')));
+if (!defined('DB_USER')) define('DB_USER', getenv('DB_USER') ?: (isset($_ENV['DB_USER']) ? $_ENV['DB_USER'] : ($isVercelEnv ? 'siacecom_c58admin' : 'root')));
 if (!defined('DB_PASS')) define('DB_PASS', getenv('DB_PASS') !== false ? getenv('DB_PASS') : (isset($_ENV['DB_PASS']) ? $_ENV['DB_PASS'] : ($isVercelEnv ? 'C58admin..' : 'Yocs14870')));
 if (!defined('DB_NAME')) define('DB_NAME', getenv('DB_NAME') ?: (isset($_ENV['DB_NAME']) ? $_ENV['DB_NAME'] : ($isVercelEnv ? 'siacecom_codigo58' : 'consultoria_mof')));
 if (!defined('DB_PORT')) define('DB_PORT', intval(getenv('DB_PORT') ?: (isset($_ENV['DB_PORT']) ? $_ENV['DB_PORT'] : 3306)));
