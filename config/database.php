@@ -3,7 +3,7 @@
 
 $isVercelEnv = !empty(getenv('VERCEL')) || !empty($_ENV['VERCEL']);
 
-if (!defined('DB_HOST')) define('DB_HOST', getenv('DB_HOST') ?: (isset($_ENV['DB_HOST']) ? $_ENV['DB_HOST'] : ($isVercelEnv ? '360siace.com' : 'localhost')));
+if (!defined('DB_HOST')) define('DB_HOST', getenv('DB_HOST') ?: (isset($_ENV['DB_HOST']) ? $_ENV['DB_HOST'] : ($isVercelEnv ? '45.79.40.132' : 'localhost')));
 if (!defined('DB_USER')) define('DB_USER', getenv('DB_USER') ?: (isset($_ENV['DB_USER']) ? $_ENV['DB_USER'] : ($isVercelEnv ? 'siacecom_C58admin' : 'root')));
 if (!defined('DB_PASS')) define('DB_PASS', getenv('DB_PASS') !== false ? getenv('DB_PASS') : (isset($_ENV['DB_PASS']) ? $_ENV['DB_PASS'] : ($isVercelEnv ? 'C58admin..' : 'Yocs14870')));
 if (!defined('DB_NAME')) define('DB_NAME', getenv('DB_NAME') ?: (isset($_ENV['DB_NAME']) ? $_ENV['DB_NAME'] : ($isVercelEnv ? 'siacecom_codigo58' : 'consultoria_mof')));
@@ -131,9 +131,16 @@ class Database {
                         </div>
                     </div>
 
-                    <?php if (DB_HOST === '360siace.com'): ?>
-                    <div class="alert alert-info py-2 px-3 small mb-3">
-                        <i class="fas fa-lightbulb me-1"></i> <strong>Importante:</strong> El dominio <code>360siace.com</code> está delegado a los servidores DNS de Vercel. Si la conexión presenta tiempo de espera agotado, define en las variables de entorno de Vercel la <strong>IP compartida de tu hosting</strong> (la que aparece en la barra lateral derecha de tu cPanel) o el nombre del servidor (ej. <code>cpanel.tuservidor.com</code>) en lugar de <code>360siace.com</code>, y confirma tener habilitado <code>%</code> en <strong>MySQL Remoto</strong>.
+                    <?php if (strpos($errorMsg, 'Access denied') !== false): ?>
+                    <div class="alert alert-warning py-2 px-3 small mb-3">
+                        <i class="fas fa-key me-1"></i> <strong>Acceso Denegado por MySQL:</strong><br>
+                        El servidor respondió exitosamente en <code><?php echo htmlspecialchars(DB_HOST); ?>:<?php echo htmlspecialchars(DB_PORT); ?></code>, pero el motor MySQL denegó el acceso al usuario <code><?php echo htmlspecialchars(DB_USER); ?></code>.<br>
+                        <strong class="d-block mt-2">Verifica en tu cPanel:</strong>
+                        <ol class="mb-0 mt-1 ps-3">
+                            <li>En <strong>MySQL Remoto (Remote MySQL)</strong>: Añade <code>%</code> en el campo de host para autorizar conexiones externas.</li>
+                            <li>En <strong>Bases de Datos MySQL</strong>: En la sección "Añadir usuario a la base de datos", asegúrate de que el usuario esté vinculado y con <strong>Todos los Privilegios</strong> marcados.</li>
+                            <li>Verifica que la contraseña del usuario de base de datos coincida con la configurada.</li>
+                        </ol>
                     </div>
                     <?php endif; ?>
 
