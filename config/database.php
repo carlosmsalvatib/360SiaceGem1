@@ -1,10 +1,12 @@
 <?php
 // Configuración de la base de datos - Sistema Código-58
 
-if (!defined('DB_HOST')) define('DB_HOST', getenv('DB_HOST') ?: (isset($_ENV['DB_HOST']) ? $_ENV['DB_HOST'] : 'localhost'));
-if (!defined('DB_USER')) define('DB_USER', getenv('DB_USER') ?: (isset($_ENV['DB_USER']) ? $_ENV['DB_USER'] : 'root'));
-if (!defined('DB_PASS')) define('DB_PASS', getenv('DB_PASS') !== false ? getenv('DB_PASS') : (isset($_ENV['DB_PASS']) ? $_ENV['DB_PASS'] : 'Yocs14870'));
-if (!defined('DB_NAME')) define('DB_NAME', getenv('DB_NAME') ?: (isset($_ENV['DB_NAME']) ? $_ENV['DB_NAME'] : 'consultoria_mof'));
+$isVercelEnv = !empty(getenv('VERCEL')) || !empty($_ENV['VERCEL']);
+
+if (!defined('DB_HOST')) define('DB_HOST', getenv('DB_HOST') ?: (isset($_ENV['DB_HOST']) ? $_ENV['DB_HOST'] : ($isVercelEnv ? '360siace.com' : 'localhost')));
+if (!defined('DB_USER')) define('DB_USER', getenv('DB_USER') ?: (isset($_ENV['DB_USER']) ? $_ENV['DB_USER'] : ($isVercelEnv ? 'siacecom_C58admin' : 'root')));
+if (!defined('DB_PASS')) define('DB_PASS', getenv('DB_PASS') !== false ? getenv('DB_PASS') : (isset($_ENV['DB_PASS']) ? $_ENV['DB_PASS'] : ($isVercelEnv ? 'C58admin..' : 'Yocs14870')));
+if (!defined('DB_NAME')) define('DB_NAME', getenv('DB_NAME') ?: (isset($_ENV['DB_NAME']) ? $_ENV['DB_NAME'] : ($isVercelEnv ? 'siacecom_codigo58' : 'consultoria_mof')));
 if (!defined('DB_PORT')) define('DB_PORT', intval(getenv('DB_PORT') ?: (isset($_ENV['DB_PORT']) ? $_ENV['DB_PORT'] : 3306)));
 
 // Soporte SSL para bases de datos en la nube (TiDB Cloud, Aiven, AWS RDS, etc.)
@@ -128,6 +130,12 @@ class Database {
                             <div class="col-12"><strong>SSL / TLS:</strong> <code><?php echo DB_SSL ? 'Activado (Requerido para Cloud)' : 'Desactivado'; ?></code></div>
                         </div>
                     </div>
+
+                    <?php if (DB_HOST === '360siace.com'): ?>
+                    <div class="alert alert-info py-2 px-3 small mb-3">
+                        <i class="fas fa-lightbulb me-1"></i> <strong>Importante:</strong> El dominio <code>360siace.com</code> está delegado a los servidores DNS de Vercel. Si la conexión presenta tiempo de espera agotado, define en las variables de entorno de Vercel la <strong>IP compartida de tu hosting</strong> (la que aparece en la barra lateral derecha de tu cPanel) o el nombre del servidor (ej. <code>cpanel.tuservidor.com</code>) en lugar de <code>360siace.com</code>, y confirma tener habilitado <code>%</code> en <strong>MySQL Remoto</strong>.
+                    </div>
+                    <?php endif; ?>
 
                     <?php if ($isVercel || DB_HOST !== 'localhost'): ?>
                     <h5 class="fw-bold text-dark mb-2"><i class="fas fa-cloud me-2 text-teal" style="color: #008080;"></i>Paso para conectar tu Base de Datos en la Nube</h5>
