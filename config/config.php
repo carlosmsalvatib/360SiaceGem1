@@ -1,15 +1,30 @@
 <?php
-// Configuración general del sistema Código-58
+// Habilitar almacenamiento en buffer de salida para evitar "headers already sent"
+if (!ob_get_level()) {
+    ob_start();
+}
+
+$isVercel = !empty(getenv('VERCEL')) || !empty($_ENV['VERCEL']) || isset($_SERVER['LAMBDA_TASK_ROOT']) || isset($_SERVER['VERCEL']);
+
+// En entornos serverless como Vercel, asegurar ruta de sesiones en /tmp y control de errores
+if ($isVercel) {
+    if (is_dir('/tmp')) {
+        @ini_set('session.save_path', '/tmp');
+    }
+    error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_WARNING);
+    ini_set('display_errors', 0);
+    ini_set('log_errors', 1);
+} else {
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+}
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
 // Configuración de zona horaria
 date_default_timezone_set('America/Caracas');
-
-// Configuración de errores
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
 // Detección dinámica de URL y directorio base
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || ($_SERVER['SERVER_PORT'] ?? 80) == 443) ? "https://" : "http://";
@@ -46,7 +61,11 @@ define('SITE_URL', $protocol . $host . $baseFolder);
 
 // Directorios de uploads
 $docRoot = rtrim(str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT'] ?? __DIR__ . '/..'), '/');
-define('UPLOAD_DIR', $docRoot . $baseFolder . 'uploads/');
+if ($isVercel) {
+    define('UPLOAD_DIR', '/tmp/uploads/');
+} else {
+    define('UPLOAD_DIR', $docRoot . $baseFolder . 'uploads/');
+}
 define('UPLOAD_URL', SITE_URL . 'uploads/');
 
 // Incluir archivos de base de datos y utilidades

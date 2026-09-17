@@ -1,5 +1,8 @@
 <?php
 // Universal Serverless Router para Vercel - Sistema Código-58
+if (!ob_get_level()) {
+    ob_start();
+}
 
 $requestUri = $_SERVER['REQUEST_URI'] ?? '/';
 $parsedUrl  = parse_url($requestUri);

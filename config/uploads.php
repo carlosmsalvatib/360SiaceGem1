@@ -46,7 +46,7 @@ function createUploadDirectories() {
     
     foreach ($dirs as $dir) {
         if (!is_dir($dir)) {
-            mkdir($dir, 0755, true);
+            @mkdir($dir, 0755, true);
         }
     }
 }
@@ -177,21 +177,15 @@ function getFileIcon($extension) {
 function cleanTempFiles($hours = 24) {
     $tempDir = UPLOAD_TEMPORALES;
     if (is_dir($tempDir)) {
-        $files = glob($tempDir . '*');
-        $now = time();
-        foreach ($files as $file) {
-            if (is_file($file) && ($now - filemtime($file)) > ($hours * 3600)) {
-                unlink($file);
+        $files = @glob($tempDir . '*');
+        if ($files) {
+            $now = time();
+            foreach ($files as $file) {
+                if (is_file($file) && ($now - filemtime($file)) > ($hours * 3600)) {
+                    @unlink($file);
+                }
             }
         }
     }
-}
-
-// Crear directorios al cargar
-createUploadDirectories();
-
-// Limpiar archivos temporales automáticamente (solo si se incluye)
-if (rand(1, 100) <= 10) { // 10% de probabilidad
-    cleanTempFiles();
 }
 ?>
